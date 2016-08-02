@@ -23,5 +23,4 @@ http://www.cloudbase.it/freerdp-for-windows-nightly-builds/
 git clone https://github.com/Blogshot/jFRDP.git
 
 ### Executable .jar
-https://github.com/Blogshot/jFRDP/blob/master/jFRPD_main.jar
-
+https://github.com/Blogshot/jFRDP/raw/master/jFRDP.jar
