@@ -1,5 +1,6 @@
 package main;
 
+import sun.applet.Main;
 import util.TreePopupMenu;
 
 import javax.swing.*;
@@ -90,12 +91,12 @@ public class MainForm {
     });
 
 
-    ImageIcon rdpIcon = new ImageIcon(Start.class.getResource("/rdp.png"));
-    ImageIcon httpIcon = new ImageIcon(Start.class.getResource("/http.png"));
+    ImageIcon rdpIcon = new ImageIcon(MainForm.class.getResource("/rdp.png"));
+    ImageIcon httpIcon = new ImageIcon(MainForm.class.getResource("/http.png"));
 
     connectionList.addMouseListener(new MouseAdapter() {
       public void mouseClicked(MouseEvent event) {
-        
+
         Connection connection;
         Customer customer;
 
