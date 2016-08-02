@@ -1,0 +1,60 @@
+[
+  {
+    "name": "Customer1",
+    "connections": [
+      {
+        "console": true,
+        "compression": false,
+        "label": "Default RDP",
+        "address": "192.168.1.1",
+        "username": "username",
+        "domain": "example",
+        "password": "<hashed-secret>",
+        "resolution": "1280x720",
+        "note": "Sample Connnction",
+        "type":"rdp"
+      },
+      {
+        "console": true,
+        "compression": false,
+        "label": "Default HTTP",
+        "address": "192.168.1.1",
+        "username": "username",
+        "domain": "example",
+        "password": "<hashed-secret>",
+        "resolution": "1280x720",
+        "note": "Sample Connnction",
+        "type":"http"
+      }
+    ]
+  },
+  {
+    "name": "Customer2",
+    "connections": [
+      {
+        "console": true,
+        "compression": false,
+        "label": "Default RDP",
+        "address": "192.168.1.1",
+        "username": "username",
+        "domain": "example",
+        "password": "<hashed-secret>",
+        "resolution": "1280x720",
+        "note": "Sample Connnction",
+        "type":"rdp"
+      },
+      {
+        "console": true,
+        "compression": false,
+        "label": "Default HTTP",
+        "address": "192.168.1.1",
+        "username": "username",
+        "domain": "example",
+        "password": "<hashed-secret>",
+        "resolution": "1280x720",
+        "note": "Sample Connnction",
+        "type":"http"
+      }
+    ]
+  }
+]

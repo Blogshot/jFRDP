@@ -1,0 +1,14 @@
+# Gradle
+.gradle
+gradle
+gradlew*
+
+# Build
+build/
+
+# Personal connections-File
+connections.json
+config.json
+
+# IDEA
+.idea
