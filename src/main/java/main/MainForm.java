@@ -1,7 +1,7 @@
 package main;
 
-import sun.applet.Main;
-import util.TreePopupMenu;
+import util.ConnectionPopupMenu;
+import util.CustomerPopupMenu;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -59,16 +59,34 @@ public class MainForm {
       @Override
       public void mouseClicked(MouseEvent e) {
 
-        if (Start.customers.isEmpty()) {
-          Start.customers.add(new Customer("Default"));
-        }
+        Object selection = connectionList.getLastSelectedPathComponent();
 
-        for (Customer customer : Start.customers) {
-          if (customer.name.equals("Default")) {
-            System.out.println("Adding new Connection");
-            customer.addConnection(new Connection());
+
+        Customer customer;
+
+        if (selection != null) {
+
+          Object o = ((DefaultMutableTreeNode)connectionList.getLastSelectedPathComponent()).getUserObject();
+
+          if (o instanceof Customer) {
+            customer = (Customer)o;
+          } else { // Is instance of Connection -> get Parent as Customer
+            Object parent = ((DefaultMutableTreeNode)connectionList.getSelectionPath().getParentPath().getLastPathComponent()).getUserObject();
+            customer = (Customer)parent;
+          }
+        } else {
+
+          // Add if not existent
+          if (!Start.customers.contains("Default")) {
+            customer = new Customer("Default");
+            Start.customers.add(customer);
+          } else {
+            customer = Start.customers.get("Default");
           }
         }
+
+        System.out.println("Adding new Connection to " + customer.getName());
+        customer.addConnection(new Connection());
 
         Start.saveConnections();
         Start.fillGUI();
@@ -106,13 +124,14 @@ public class MainForm {
 
 
         if (node != null) {
+
           if (node.getUserObject() instanceof Connection) {
             connection = (Connection) node.getUserObject();
             customer = (Customer) ((DefaultMutableTreeNode) node.getParent()).getUserObject();
 
             if (SwingUtilities.isRightMouseButton(event)) {
               System.out.println("Right Mouse");
-              new TreePopupMenu(customer, connection, event.getX(), event.getY()).setVisible(true);
+              new ConnectionPopupMenu(customer, connection, event.getX(), event.getY()).setVisible(true);
               return;
             }
 
@@ -131,6 +150,15 @@ public class MainForm {
             }
             if (event.getClickCount() == 1) {
               connection.startEdit(MainForm.this);
+              return;
+            }
+          } else if (node.getUserObject() instanceof Customer) {
+
+            customer = (Customer)node.getUserObject();
+
+            if (SwingUtilities.isRightMouseButton(event)) {
+              System.out.println("Right Mouse");
+              new CustomerPopupMenu(customer, event.getX(), event.getY()).setVisible(true);
               return;
             }
           }

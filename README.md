@@ -20,7 +20,7 @@ http://www.cloudbase.it/freerdp-for-windows-nightly-builds/
 # Install jFRDP
 
 ### Via Sources
-git clone https://github.com/Blogshot/jFRDP.git
+`git clone https://github.com/Blogshot/jFRDP.git
 
 ### Executable .jar
 https://github.com/Blogshot/jFRDP/raw/master/jFRDP.jar

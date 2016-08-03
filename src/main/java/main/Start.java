@@ -3,27 +3,23 @@ package main;
 import com.google.gson.*;
 import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
-import util.TreePopupMenu;
+import util.Customers;
 
 import java.awt.event.ActionEvent;
 import java.lang.reflect.Type;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.*;
-import java.net.URI;
 import java.util.ArrayList;
 
 public class Start {
 
   public static MainForm form;
-  public static ArrayList<Customer> customers = new ArrayList<Customer>();
+  public static Customers customers = new Customers();
 
   static String secrethash = "";
   private static String master = "";
@@ -44,7 +40,6 @@ public class Start {
     setupMenuBar(frame);
 
     frame.setVisible(true);
-
 
     loadConfig();
 
@@ -80,14 +75,21 @@ public class Start {
     menuFile.add(menuFileNew);
 
     //Hinzufügen von Menüeinträgen in das Dateimenü
-    JMenuItem menuItemFileSave = new JMenuItem(new AbstractAction("Speichern") {
+    JMenuItem menuItemFileSave = new JMenuItem(new AbstractAction("Save") {
       public void actionPerformed(ActionEvent e) {
         saveConfig();
         saveConnections();
       }
     });
+    JMenuItem menuItemFileSaveAs = new JMenuItem(new AbstractAction("Save as...") {
+      public void actionPerformed(ActionEvent e) {
+        saveConfig(showInputDialog("Enter file name"));
+        saveConnections();
+      }
+    });
 
     menuFile.add(menuItemFileSave);
+    menuFile.add(menuItemFileSaveAs);
 
 
     frame.setJMenuBar(menuBar);
@@ -122,8 +124,6 @@ public class Start {
 
 
     for (Customer customer : customers) {
-
-      System.out.println("Adding " + customer.name);
 
       DefaultMutableTreeNode customerNode = new DefaultMutableTreeNode(customer);
 
@@ -177,7 +177,11 @@ public class Start {
   }
 
   public static void saveConfig() {
-    System.out.print("Saving...");
+    saveConfig("config.json");
+  }
+
+  public static void saveConfig(String name) {
+    System.out.print("Saving configuration...");
 
     try {
 
@@ -187,17 +191,20 @@ public class Start {
 
       json.addProperty("master", master);
 
-      FileWriter writer = new FileWriter("config.json");
-      writer.write(new Gson().toJson(json));
+      FileWriter writer = new FileWriter(name);
+      writer.write(gson.toJson(json));
       writer.close();
 
+      System.out.println("done.");
 
     } catch (IOException e) {
       e.printStackTrace();
     }
+
+
   }
 
-  public static ArrayList<Customer> loadCustomers() {
+  public static Customers loadCustomers() {
 
     try {
       Reader reader = new FileReader("connections.json");
@@ -214,15 +221,9 @@ public class Start {
 
       JsonElement root = new JsonParser().parse(content);
 
-      Type type = new TypeToken<ArrayList<Customer>>() {
-      }.getType();
-      ArrayList<Customer> customers = new Gson().fromJson(root, type);
+      Type type = new TypeToken<Customers>() {}.getType();
 
-      for (Customer customer : customers) {
-        System.out.println(customer.name);
-      }
-
-      return customers;
+      return new Gson().fromJson(root, type);
 
     } catch (Exception e) {
       JOptionPane.showMessageDialog(new JFrame(), e.getMessage());
@@ -230,7 +231,7 @@ public class Start {
     }
 
     System.out.println("No connections found, returning empty array");
-    return new ArrayList<Customer>();
+    return new Customers();
   }
 
   private static String showSecretInputDialog() {
@@ -250,7 +251,7 @@ public class Start {
   }
 
   public static void saveConnections() {
-    System.out.print("Saving...");
+    System.out.print("Saving connections...");
 
     try {
 
@@ -261,13 +262,11 @@ public class Start {
       writer.write(json);
       writer.close();
 
+      System.out.println("done.");
 
     } catch (IOException e) {
       e.printStackTrace();
     }
-
-    System.out.println("done.");
-
   }
 
   public static void setNewMaster(String newMaster) {
@@ -285,10 +284,8 @@ public class Start {
 
         System.out.println("  Re-Encrypting " + connection.label + "...");
 
+        // Decrypt password
         String clearPass = connection.decrypt(connection.password);
-
-        System.out.println("    Old encrypted pass: " + connection.password);
-        System.out.println("    ClearPass: " + clearPass);
 
         // Re-Encrypt with new key
         connection.encrypt(clearPass, newHash);

@@ -26,4 +26,12 @@ public class Customer {
   public void removeConnection(Connection connection) {
     this.connections.remove(connection);
   }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getName() {
+    return this.name;
+  }
 }
