@@ -4,10 +4,7 @@ import util.ConnectionPopupMenu;
 import util.CustomerPopupMenu;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
+import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetAdapter;
@@ -35,6 +32,11 @@ public class MainForm {
   public Connection currentEdit;
 
   public MainForm() {
+
+    // Do not show default nodes on startup
+    DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
+    connectionList.setModel(new DefaultTreeModel(root));
+    connectionList.setRootVisible(false);
 
     label.addFocusListener(new saveListener("label"));
     address.addFocusListener(new saveListener("address"));
