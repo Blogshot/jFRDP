@@ -1,7 +1,7 @@
 package util;
 
-import main.Connection;
 import main.Customer;
+import main.MainForm;
 import main.Start;
 
 import javax.swing.*;
@@ -11,11 +11,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import static main.MainForm.customers;
+import static util.ConfigManager.saveConnections;
+
 public class CustomerPopupMenu extends JPanel {
 
-  public JPopupMenu popup;
+  private final JPopupMenu popup;
 
-  public CustomerPopupMenu(Customer customer, int x, int y) {
+  public CustomerPopupMenu(MainForm form, Customer customer, int x, int y) {
 
     popup = new JPopupMenu();
     ActionListener menuListener = new ActionListener() {
@@ -23,18 +26,18 @@ public class CustomerPopupMenu extends JPanel {
         System.out.println("Popup menu item [" + event.getActionCommand() + "] was pressed.");
         switch (event.getActionCommand()) {
           case "Delete":
-            Start.customers.remove(customer);
+            customers.remove(customer);
             break;
           case "Rename":
             customer.setName(Start.showInputDialog("Enter a new name"));
             break;
           case "Duplicate":
-            Start.customers.add(customer);
+            customers.add(new Customer(customer));
             break;
         }
 
-        Start.saveConnections();
-        Start.fillGUI();
+        saveConnections();
+        form.fillGUI();
       }
     };
 
@@ -62,7 +65,7 @@ public class CustomerPopupMenu extends JPanel {
   }
 
   // An inner class to check whether mouse events are the popup trigger
-  class MouseHoverListener extends MouseAdapter {
+  private class MouseHoverListener extends MouseAdapter {
     @Override
     public void mouseEntered(MouseEvent e) {
       e.getComponent().setBackground(Color.blue);

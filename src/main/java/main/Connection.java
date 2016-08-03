@@ -2,14 +2,18 @@ package main;
 
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
+import util.ErrorDialog;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.security.Key;
 import java.util.ArrayList;
 
 import static main.Connection.Type.rdp;
+import static main.MainForm.secrethash;
 
 public class Connection {
 
@@ -46,54 +50,76 @@ public class Connection {
 
   }
 
+  public Connection(Connection another) {
+    this.label = another.label;
+    this.address = another.address;
+    this.username = another.username;
+    this.password = another.password;
+    this.domain = another.domain;
+    this.resolution = another.resolution;
+    this.compression = another.compression;
+    this.console = another.console;
+    this.note = another.note;
+    this.type = another.type;
+    this.drives = another.drives;
+  }
+
   public void openRDP() {
     // Open a new RDP-Connection
-    String parameter = "";
+    ArrayList<String> parameter = new ArrayList<>();
+    
+    // command
+    parameter.add("/usr/local/bin/xfreerdp");
 
+    // parameters
     if (this.console) {
-      parameter += " /admin";
+      parameter.add("/admin");
     }
-    if (!this.compression) {
-      parameter += " /compression-level:0";
+    if (this.compression) {
+      parameter.add("/compression-level:0");
     }
     if (!this.domain.equals("")) {
-      parameter += " /d:" + this.domain;
+      parameter.add("/d:" + this.domain);
     }
     if (!this.username.equals("")) {
-      parameter += " /u:" + this.username;
+      parameter.add("/u:" + this.username);
     }
     if (!this.password.equals("")) {
-      parameter += " /p:" + decrypt(this.password);
+      parameter.add("/p:" + decrypt(this.password));
     }
     if (!this.resolution.equals("")) {
-      parameter += " /size:" + this.resolution;
+      parameter.add("/size:" + this.resolution);
     }
 
-    parameter += " /cert-ignore +clipboard /drive:\"Home\",\"" + System.getenv("HOME") + "\"";
+    parameter.add("/cert-ignore");
 
-    parameter += " /v:" + this.address;
+    parameter.add("+clipboard");
+    parameter.add("/drive:Home," + System.getenv("HOME"));
 
-    parameter = parameter.trim();
+    parameter.add("/v:" + this.address);
 
-    String command = "xfreerdp ";
+    String listString = "";
 
-    if (drives.size() > 0) {
-      command = "osascript -e 'do shell script \"java -jar jFreeRDP.jar\" with administrator privileges'";
+    for (String s : parameter)
+    {
+      listString += s + "\n";
     }
-
-
-    System.out.println(command + parameter);
 
     try {
-      execute(command + parameter);
+
+      execute(listString.split("\n"));
     } catch (Exception e) {
       e.printStackTrace();
+      new ErrorDialog(e);
     }
 
   }
 
-  private void execute(String command) throws IOException, InterruptedException {
-    Runtime.getRuntime().exec(command);
+  private void execute(String[] params) throws IOException, InterruptedException {
+
+    ProcessBuilder ps = new ProcessBuilder(params);
+
+    ps.start();
   }
 
   @Override
@@ -125,14 +151,7 @@ public class Connection {
   private static final String ALGORITHM = "AES";
 
   public String encrypt(String valueToEnc) {
-    try {
-      return encrypt(valueToEnc, Start.secrethash);
-
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-
-    return null;
+    return encrypt(valueToEnc, secrethash);
   }
 
   public String encrypt(String valueToEnc, String inputKey) {
@@ -145,6 +164,7 @@ public class Connection {
       return new BASE64Encoder().encode(encValue);
     } catch (Exception e) {
       e.printStackTrace();
+      new ErrorDialog(e);
     }
 
     return null;
@@ -160,31 +180,36 @@ public class Connection {
       return new String(decValue);
     } catch (Exception e) {
       e.printStackTrace();
+      new ErrorDialog(e);
     }
 
     return null;
   }
 
-  public static Key generateKey() throws Exception {
-    return generateKey(Start.secrethash);
+  private static Key generateKey() {
+    return generateKey(secrethash);
   }
 
-  private static Key generateKey(String input) throws Exception {
+  private static Key generateKey(String input) {
     return new SecretKeySpec(input.getBytes(), ALGORITHM);
   }
 
-  private class Drive
-  {
+  private class Drive {
     private final String label;
     private final String path;
 
-    public Drive(String label, String path)
-    {
-      this.label   = label;
+    public Drive(String label, String path) {
+      this.label = label;
       this.path = path;
     }
 
-    public String label()   { return label; }
-    public String path() { return path; }
+    public String label() {
+      return label;
+    }
+
+    public String path() {
+      return path;
+    }
   }
+
 }

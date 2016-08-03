@@ -9,13 +9,16 @@ import java.awt.event.MouseEvent;
 
 import main.Connection;
 import main.Customer;
+import main.MainForm;
 import main.Start;
+
+import static util.ConfigManager.saveConnections;
 
 public class ConnectionPopupMenu extends JPanel {
 
-  public JPopupMenu popup;
+  private final JPopupMenu popup;
 
-  public ConnectionPopupMenu(Customer customer, Connection connection, int x, int y) {
+  public ConnectionPopupMenu(MainForm form, Customer customer, Connection connection, int x, int y) {
 
     popup = new JPopupMenu();
     ActionListener menuListener = new ActionListener() {
@@ -29,15 +32,15 @@ public class ConnectionPopupMenu extends JPanel {
             connection.label = Start.showInputDialog("Enter a new name");
             break;
           case "Duplicate":
-            customer.addConnection(connection);
+            customer.addConnection(new Connection(connection));
             break;
           case "Edit":
             connection.startEdit(Start.form);
             break;
         }
 
-        Start.saveConnections();
-        Start.fillGUI();
+        saveConnections();
+        form.fillGUI();
       }
     };
 
@@ -71,7 +74,7 @@ public class ConnectionPopupMenu extends JPanel {
   }
 
   // An inner class to check whether mouse events are the popup trigger
-  class MouseHoverListener extends MouseAdapter {
+  private class MouseHoverListener extends MouseAdapter {
     @Override
     public void mouseEntered(MouseEvent e) {
       e.getComponent().setBackground(Color.blue);

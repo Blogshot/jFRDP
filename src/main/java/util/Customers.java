@@ -4,6 +4,7 @@ import main.Customer;
 
 import java.util.ArrayList;
 
+@SuppressWarnings("SameParameterValue")
 public class Customers extends ArrayList<Customer> {
 
   public boolean contains(String name) {

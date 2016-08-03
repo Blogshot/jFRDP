@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Customer {
 
-  String name = "";
-  ArrayList<Connection> connections = new ArrayList<Connection>();
+  public String name = "";
+  public ArrayList<Connection> connections = new ArrayList<>();
 
   public Customer(String name) {
     this.name = name;
@@ -34,4 +34,11 @@ public class Customer {
   public String getName() {
     return this.name;
   }
+
+
+  public Customer(Customer another) {
+    this.name = another.name;
+    this.connections = another.connections;
+  }
+
 }
