@@ -16,12 +16,10 @@ import static util.ConfigManager.saveConnections;
 
 public class CustomerPopupMenu extends JPanel {
 
-  private final JPopupMenu popup;
-
   public CustomerPopupMenu(MainForm form, Customer customer, int x, int y) {
 
-    popup = new JPopupMenu();
-    ActionListener menuListener = new ActionListener() {
+    JPopupMenu popup = new JPopupMenu();
+    @SuppressWarnings("Convert2Lambda") ActionListener menuListener = new ActionListener() {
       public void actionPerformed(ActionEvent event) {
         System.out.println("Popup menu item [" + event.getActionCommand() + "] was pressed.");
         switch (event.getActionCommand()) {
