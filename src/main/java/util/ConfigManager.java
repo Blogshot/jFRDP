@@ -18,7 +18,6 @@ public class ConfigManager {
 
   public static void loadConfig() {
 
-    String content = null;
     try {
       Reader reader = new FileReader("config.json");
 
@@ -31,7 +30,7 @@ public class ConfigManager {
       }
       reader.close();
 
-      content = sb.toString();
+      String content = sb.toString();
 
       JsonElement root = new JsonParser().parse(content);
 
@@ -40,6 +39,8 @@ public class ConfigManager {
     } catch (Exception e) {
       JOptionPane.showMessageDialog(new JFrame(), e.getMessage());
       e.printStackTrace();
+      new ErrorDialog(e);
+
     }
   }
 
@@ -66,6 +67,8 @@ public class ConfigManager {
 
     } catch (IOException e) {
       e.printStackTrace();
+      new ErrorDialog(e);
+
     }
 
 
@@ -93,8 +96,8 @@ public class ConfigManager {
       return new Gson().fromJson(root, type);
 
     } catch (Exception e) {
-      JOptionPane.showMessageDialog(new JFrame(), e.getMessage());
       e.printStackTrace();
+      new ErrorDialog(e);
     }
 
     System.out.println("No connections found, returning empty array");
@@ -102,6 +105,11 @@ public class ConfigManager {
   }
 
   public static void saveConnections() {
+
+    saveConnections("connections.json");
+  }
+
+  public static void saveConnections(String name) {
     System.out.print("Saving connections...");
 
     try {
@@ -109,7 +117,7 @@ public class ConfigManager {
       Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
       String json = gson.toJson(customers);
-      FileWriter writer = new FileWriter("connections.json");
+      FileWriter writer = new FileWriter(name);
       writer.write(json);
       writer.close();
 
@@ -117,6 +125,7 @@ public class ConfigManager {
 
     } catch (IOException e) {
       e.printStackTrace();
+      new ErrorDialog(e);
     }
   }
 
@@ -141,7 +150,7 @@ public class ConfigManager {
         // Re-Encrypt with new key
         connection.encrypt(clearPass, newHash);
 
-        System.out.println("    New encrypted pass: " + connection.password);
+        System.out.println("    New encrypted txt_password: " + connection.password);
       }
     }
 

@@ -28,9 +28,7 @@ public class CustomMenuBar {
     menuBar.add(menuHelp);
 
     //Hinzufügen von Untermenüs
-    JMenu menuFileNew =
-        new JMenu("Neu");
-
+    JMenu menuFileNew = new JMenu("Neu");
 
     menuFile.add(menuFileNew);
 
@@ -43,8 +41,8 @@ public class CustomMenuBar {
     });
     JMenuItem menuItemFileSaveAs = new JMenuItem(new AbstractAction("Save as...") {
       public void actionPerformed(ActionEvent e) {
-        saveConfig(showInputDialog("Enter file name"));
-        saveConnections();
+        saveConfig(showInputDialog("Enter file name for the config"));
+        saveConnections(showInputDialog("Enter file name for the connections"));
       }
     });
 
