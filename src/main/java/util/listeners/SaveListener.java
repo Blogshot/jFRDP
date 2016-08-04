@@ -2,6 +2,7 @@ package util.listeners;
 
 import main.Connection;
 import main.MainForm;
+import util.Keyboards;
 
 import javax.swing.*;
 import java.awt.event.FocusAdapter;
@@ -13,22 +14,20 @@ import static util.ConfigManager.saveConnections;
 public class SaveListener extends FocusAdapter {
 
   private final String attribute;
-  private final Connection currentEdit;
   private final MainForm form;
 
   public SaveListener(MainForm form, String attribute) {
 
     this.form = form;
-    this.currentEdit = form.currentEdit;
     this.attribute = attribute;
   }
 
   @Override
   public void focusLost(FocusEvent e) {
 
-    if (currentEdit != null) {
+    if (form.currentEdit != null) {
 
-      Object o = currentEdit; // The object you want to inspect
+      Object o = form.currentEdit; // The object you want to inspect
       Class<?> c = o.getClass();
 
       try {
@@ -37,22 +36,30 @@ public class SaveListener extends FocusAdapter {
         attribute.setAccessible(true);
 
         try {
-          String input = ((JTextField) e.getComponent()).getText();
+          String input;
 
           switch (this.attribute) {
-            case "password":
+            case "keyboardCode":
+              input = ((Keyboards.Keyboard)form.drp_keyboards.getSelectedItem()).code;
               // Only encrypt if there is a difference
-              attribute.set(currentEdit, currentEdit.encrypt(input));
+              attribute.set(form.currentEdit, input);
+
+              break;
+            case "password":
+              input = ((JTextField) e.getComponent()).getText();
+              // Only encrypt if there is a difference
+              attribute.set(form.currentEdit, form.currentEdit.encrypt(input));
 
               break;
             case "address":
+              input = ((JTextField) e.getComponent()).getText();
               if (input.startsWith("http")) {
-                currentEdit.type = Connection.Type.http;
+                form.currentEdit.type = Connection.Type.http;
               }
-              attribute.set(currentEdit, ((JTextField) e.getComponent()).getText());
+              attribute.set(form.currentEdit, input);
               break;
             default:
-              attribute.set(currentEdit, ((JTextField) e.getComponent()).getText());
+              attribute.set(form.currentEdit, ((JTextField) e.getComponent()).getText());
               break;
           }
 
