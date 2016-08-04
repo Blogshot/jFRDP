@@ -3,12 +3,11 @@ package main;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 import util.ErrorDialog;
+import util.Keyboards;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.security.Key;
 import java.util.ArrayList;
 
@@ -28,6 +27,7 @@ public class Connection {
   private String resolution = "";
   private String note = "";
   private ArrayList<Drive> drives = new ArrayList<>();
+  public String keyboardCode = "";
 
   public Type type = rdp;
 
@@ -47,7 +47,7 @@ public class Connection {
     this.console = true;
     this.note = "";
     this.type = rdp;
-
+    this.keyboardCode = "0x00000407";
   }
 
   public Connection(Connection another) {
@@ -62,6 +62,7 @@ public class Connection {
     this.note = another.note;
     this.type = another.type;
     this.drives = another.drives;
+    this.keyboardCode = another.keyboardCode;
   }
 
   public void openRDP() {
@@ -76,7 +77,7 @@ public class Connection {
       parameter.add("/admin");
     }
     if (this.compression) {
-      parameter.add("/compression-level:0");
+      parameter.add("/cb_compression-level:0");
     }
     if (!this.domain.equals("")) {
       parameter.add("/d:" + this.domain);
@@ -95,6 +96,7 @@ public class Connection {
 
     parameter.add("+clipboard");
     parameter.add("/drive:Home," + System.getenv("HOME"));
+    parameter.add("/kbd:" + this.keyboardCode);
 
     parameter.add("/v:" + this.address);
 
@@ -115,7 +117,7 @@ public class Connection {
 
   }
 
-  private void execute(String[] params) throws IOException, InterruptedException {
+  private void execute(String[] params) throws IOException {
 
     ProcessBuilder ps = new ProcessBuilder(params);
 
@@ -134,17 +136,19 @@ public class Connection {
   public void startEdit(MainForm form) {
     form.currentEdit = this;
 
-    form.label.setText(label);
-    form.address.setText(address);
-    form.user.setText(username);
-    form.pass.setText(decrypt(password));
-    form.domain.setText(domain);
-    form.resolution.setText(resolution);
+    form.txt_label.setText(label);
+    form.txt_address.setText(address);
+    form.txt_username.setText(username);
+    form.txt_password.setText(decrypt(password));
+    form.txt_domain.setText(domain);
+    form.txt_resolution.setText(resolution);
 
-    form.console.setSelected(console);
-    form.compression.setSelected(compression);
+    form.cb_console.setSelected(console);
+    form.cb_compression.setSelected(compression);
 
     form.txt_note.setText(note);
+
+    form.drp_keyboards.setSelectedIndex(Keyboards.indexOf(this.keyboardCode));
 
   }
 

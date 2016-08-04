@@ -2,6 +2,7 @@ package main;
 
 import util.CustomMenuBar;
 import util.Customers;
+import util.Keyboards;
 import util.listeners.CDropTargetAdapter;
 import util.listeners.SaveListener;
 import util.listeners.jTreeMouseAdapter;
@@ -19,19 +20,20 @@ import static util.MD5Wrapper.createHash;
 
 public class MainForm {
   public JTree connectionList;
-  public JTextField resolution;
-  public JTextField label;
-  public JTextField user;
-  public JTextField address;
-  public JPasswordField pass;
-  public JCheckBox console;
-  public JCheckBox compression;
+  public JTextField txt_resolution;
+  public JTextField txt_label;
+  public JTextField txt_username;
+  public JTextField txt_address;
+  public JPasswordField txt_password;
+  public JCheckBox cb_console;
+  public JCheckBox cb_compression;
   private JPanel root;
-  public JTextField domain;
+  public JTextField txt_domain;
   private JButton btn_masterkey;
   private JButton btn_add;
   private JButton btn_add_grp;
   public JTextField txt_note;
+  public JComboBox drp_keyboards;
 
   public static Customers customers = new Customers();
 
@@ -41,6 +43,10 @@ public class MainForm {
   public static String master = "";
 
   public MainForm() {
+
+    for (Keyboards.Keyboard keyboard : Keyboards.getKeyboards()) {
+      drp_keyboards.addItem(keyboard);
+    }
 
     // Do not show default nodes on startup
     DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
@@ -73,14 +79,16 @@ public class MainForm {
     }
 
 
-    label.addFocusListener(new SaveListener(this, "label"));
-    address.addFocusListener(new SaveListener(this, "address"));
-    user.addFocusListener(new SaveListener(this, "username"));
-    pass.addFocusListener(new SaveListener(this, "password"));
-    domain.addFocusListener(new SaveListener(this, "domain"));
-    console.addFocusListener(new SaveListener(this, "console"));
-    compression.addFocusListener(new SaveListener(this, "compression"));
+    txt_label.addFocusListener(new SaveListener(this, "label"));
+    txt_address.addFocusListener(new SaveListener(this, "address"));
+    txt_username.addFocusListener(new SaveListener(this, "username"));
+    txt_password.addFocusListener(new SaveListener(this, "password"));
+    txt_domain.addFocusListener(new SaveListener(this, "domain"));
+    txt_resolution.addFocusListener(new SaveListener(this, "resolution"));
+    cb_console.addFocusListener(new SaveListener(this, "console"));
+    cb_compression.addFocusListener(new SaveListener(this, "compression"));
     txt_note.addFocusListener(new SaveListener(this, "note"));
+    drp_keyboards.addFocusListener(new SaveListener(this, "keyboardCode"));
 
 
     btn_masterkey.addMouseListener(new MouseAdapter() {
@@ -158,8 +166,8 @@ public class MainForm {
   }
 
   private static String showInputDialog(String text) {
-    // prompt the user to enter their master-key
-    // get the user's input. note that if they press Cancel, 'secret' will be null
+    // prompt the txt_username to enter their master-key
+    // get the txt_username's input. note that if they press Cancel, 'secret' will be null
     return JOptionPane.showInputDialog(new JFrame(), text);
   }
 
