@@ -3,6 +3,7 @@ package util;
 import main.Customer;
 import main.MainForm;
 import main.Start;
+import util.Dialogs.InputDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +28,7 @@ public class CustomerPopupMenu extends JPanel {
             customers.remove(customer);
             break;
           case "Rename":
-            customer.setName(Start.showInputDialog("Enter a new name"));
+            customer.setName(new InputDialog().show("Enter a new name"));
             break;
           case "Duplicate":
             customers.add(new Customer(customer));

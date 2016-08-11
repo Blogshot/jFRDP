@@ -1,16 +1,17 @@
 package util;
 
+import main.Connection;
+import main.Customer;
+import main.MainForm;
+import main.Start;
+import util.Dialogs.InputDialog;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
-import main.Connection;
-import main.Customer;
-import main.MainForm;
-import main.Start;
 
 import static util.ConfigManager.saveConnections;
 
@@ -27,7 +28,7 @@ public class ConnectionPopupMenu extends JPanel {
             customer.removeConnection(connection);
             break;
           case "Rename":
-            connection.label = Start.showInputDialog("Enter a new name");
+            connection.label = new InputDialog().show("Enter a new name");
             break;
           case "Duplicate":
             customer.addConnection(new Connection(connection));
