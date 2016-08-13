@@ -229,6 +229,12 @@ public class MainForm {
     setExpansionState(expansionState);
     connectionList.setSelectionPath(selection);
     
+    if (connectionList.getSelectionPath() != null) {
+      Object o = connectionList.getSelectionPath().getLastPathComponent();
+      if (o instanceof Connection) {
+        ((Connection) o).startEdit(this);
+      }
+    }
     connectionList.repaint();
     
   }
