@@ -8,6 +8,7 @@ import util.Keyboards;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.Key;
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import static main.MainForm.secrethash;
 
 public class Connection {
   
-  private boolean console = true;
+  private boolean console = false;
   private boolean compression = false;
   
   public String label = "";
@@ -112,23 +113,51 @@ public class Connection {
           
           ProcessBuilder ps = new ProcessBuilder(params);
           
-          ps.redirectErrorStream(true);
           debug.debugger.append(ps.command().toString().replace("[", "").replace("]", "").replace(", ", " "));
           debug.debugger.append(System.getProperty("line.separator"));
           debug.debugger.repaint();
           
           Process p = ps.start();
           
-          BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-          String line;
-          while ((line = reader.readLine()) != null) {
-            debug.debugger.append(line);
-            debug.debugger.append(System.getProperty("line.separator"));
-            debug.debugger.repaint();
-            
-          }
+          Thread stdout = new Thread(new Runnable() {
+            @Override
+            public void run() {
+              try {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                  debug.debugger.append("# - ");
+                  debug.debugger.append(line);
+                  debug.debugger.append(System.getProperty("line.separator"));
+                  debug.debugger.repaint();
+                }
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
+            }
+          });
+          stdout.start();
           
-        } catch (Exception e) {
+          Thread stderr = new Thread(new Runnable() {
+            @Override
+            public void run() {
+              try {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                  debug.debugger.append("x - ");
+                  debug.debugger.append(line);
+                  debug.debugger.append(System.getProperty("line.separator"));
+                  debug.debugger.repaint();
+                }
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
+            }
+          });
+          stderr.start();
+          
+        } catch (IOException e) {
           e.printStackTrace();
         }
       }
@@ -178,7 +207,7 @@ public class Connection {
     } else {
       try {
         Key key = generateKey(inputKey);
-    
+        
         Cipher c = Cipher.getInstance(ALGORITHM);
         c.init(Cipher.ENCRYPT_MODE, key);
         byte[] encValue = c.doFinal(valueToEnc.getBytes());
@@ -187,7 +216,7 @@ public class Connection {
         e.printStackTrace();
         new ErrorDialog(e);
       }
-  
+      
       return null;
     }
   }
