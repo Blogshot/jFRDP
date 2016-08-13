@@ -201,6 +201,7 @@ public class MainForm {
   public void fillGUI() {
     
     String expansionState = getExpansionState();
+    TreePath selection = connectionList.getSelectionPath();
     
     DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
     connectionList.setModel(new DefaultTreeModel(root));
@@ -226,6 +227,7 @@ public class MainForm {
     connectionList.expandPath(new TreePath(root));
     
     setExpansionState(expansionState);
+    connectionList.setSelectionPath(selection);
     
     connectionList.repaint();
     
