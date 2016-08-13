@@ -173,7 +173,7 @@ public class Connection {
   
   public String encrypt(String valueToEnc, String inputKey) {
     
-    if (valueToEnc.equals("")) {
+    if (valueToEnc.equals("") || master.equals("disabled")) {
       return valueToEnc;
     } else {
       try {
