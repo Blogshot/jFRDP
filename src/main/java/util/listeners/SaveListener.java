@@ -58,6 +58,12 @@ public class SaveListener extends FocusAdapter {
               }
               attribute.set(form.currentEdit, input);
               break;
+            case "console":
+              attribute.set(form.currentEdit, ((JCheckBox)e.getComponent()).isSelected());
+              break;
+            case "compression":
+              attribute.set(form.currentEdit, ((JCheckBox)e.getComponent()).isSelected());
+              break;
             default:
               attribute.set(form.currentEdit, ((JTextField) e.getComponent()).getText());
               break;
