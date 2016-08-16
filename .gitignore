@@ -5,6 +5,11 @@ gradlew*
 
 # Build
 build/
+bundles/
+
+# DMG-Creation
+jFRDP.html
+jFRDP.jnlp
 
 # Personal connections-File
 connections.json
