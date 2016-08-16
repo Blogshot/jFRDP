@@ -6,6 +6,7 @@ gradlew*
 # Build
 build/
 bundles/
+src/main/resources/icon*
 
 # DMG-Creation
 jFRDP.html
