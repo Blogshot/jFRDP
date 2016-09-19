@@ -5,20 +5,24 @@ import util.Customers;
 import util.Dialogs.InputDialog;
 import util.Keyboards;
 import util.listeners.CDropTargetAdapter;
-import util.listeners.SaveListener;
 import util.listeners.jTreeMouseAdapter;
 import util.renderer.jTreeCellRenderer;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
 import java.awt.dnd.DropTarget;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import static main.Start.form;
 import static main.Start.showSecretInputDialog;
 import static util.ConfigManager.*;
 import static util.MD5Wrapper.createHash;
@@ -32,13 +36,15 @@ public class MainForm {
   public JPasswordField txt_password;
   public JCheckBox cb_console;
   public JCheckBox cb_compression;
-  private JPanel root;
+  public JPanel root;
   public JTextField txt_domain;
   private JButton btn_masterkey;
   private JButton btn_add;
   private JButton btn_add_grp;
   public JTextField txt_note;
   public JComboBox drp_keyboards;
+  private JButton button1;
+  public JCheckBox cb_fitToScreen;
   
   public static Customers customers = new Customers();
   
@@ -46,6 +52,7 @@ public class MainForm {
   
   public static String secrethash = "";
   public static String master = "";
+  public boolean editDone;
   
   public MainForm() {
     
@@ -79,7 +86,7 @@ public class MainForm {
       fillGUI();
     } else {
       secrethash = createHash(showSecretInputDialog());
-  
+      
       if (secrethash.equals(master)) {
         fillGUI();
       } else {
@@ -87,17 +94,202 @@ public class MainForm {
       }
     }
     
-    txt_label.addFocusListener(new SaveListener(this, "label"));
-    txt_address.addFocusListener(new SaveListener(this, "address"));
-    txt_username.addFocusListener(new SaveListener(this, "username"));
-    txt_password.addFocusListener(new SaveListener(this, "password"));
-    txt_domain.addFocusListener(new SaveListener(this, "domain"));
-    txt_resolution.addFocusListener(new SaveListener(this, "resolution"));
-    cb_console.addFocusListener(new SaveListener(this, "console"));
-    cb_compression.addFocusListener(new SaveListener(this, "compression"));
-    txt_note.addFocusListener(new SaveListener(this, "note"));
-    drp_keyboards.addFocusListener(new SaveListener(this, "keyboardCode"));
+    txt_label.getDocument().addDocumentListener(new DocumentListener() {
+      @Override
+      public void insertUpdate(DocumentEvent e) {
+        currentEdit.label = txt_label.getText();
+        saveConnections();
+        connectionList.updateUI();
+      }
+      
+      @Override
+      public void removeUpdate(DocumentEvent e) {
+        currentEdit.label = txt_label.getText();
+        saveConnections();
+        connectionList.updateUI();
+      }
+      
+      @Override
+      public void changedUpdate(DocumentEvent e) {
+        currentEdit.label = txt_label.getText();
+        saveConnections();
+        connectionList.updateUI();
+      }
+    });
     
+    txt_address.getDocument().addDocumentListener(new DocumentListener() {
+      @Override
+      public void insertUpdate(DocumentEvent e) {
+        currentEdit.address = txt_address.getText();
+        saveConnections();
+        connectionList.updateUI();
+      }
+      
+      @Override
+      public void removeUpdate(DocumentEvent e) {
+        currentEdit.address = txt_address.getText();
+        saveConnections();
+        connectionList.updateUI();
+      }
+      
+      @Override
+      public void changedUpdate(DocumentEvent e) {
+        currentEdit.address = txt_address.getText();
+        saveConnections();
+        connectionList.updateUI();
+      }
+    });
+    
+    txt_username.getDocument().addDocumentListener(new DocumentListener() {
+      @Override
+      public void insertUpdate(DocumentEvent e) {
+        currentEdit.username = txt_username.getText();
+        saveConnections();
+        connectionList.updateUI();
+      }
+      
+      @Override
+      public void removeUpdate(DocumentEvent e) {
+        currentEdit.username = txt_username.getText();
+        saveConnections();
+        connectionList.updateUI();
+      }
+      
+      @Override
+      public void changedUpdate(DocumentEvent e) {
+        currentEdit.username = txt_username.getText();
+        saveConnections();
+        connectionList.updateUI();
+      }
+    });
+    
+    // TODO deprecation
+    txt_password.getDocument().addDocumentListener(new DocumentListener() {
+      @Override
+      public void insertUpdate(DocumentEvent e) {
+        currentEdit.password = currentEdit.encrypt(txt_password.getText());
+        saveConnections();
+        connectionList.updateUI();
+      }
+      
+      @Override
+      public void removeUpdate(DocumentEvent e) {
+        currentEdit.password = currentEdit.encrypt(txt_password.getText());
+        saveConnections();
+        connectionList.updateUI();
+      }
+      
+      @Override
+      public void changedUpdate(DocumentEvent e) {
+        currentEdit.password = currentEdit.encrypt(txt_password.getText());
+        saveConnections();
+        connectionList.updateUI();
+      }
+    });
+    
+    txt_domain.getDocument().addDocumentListener(new DocumentListener() {
+      @Override
+      public void insertUpdate(DocumentEvent e) {
+        currentEdit.domain = txt_domain.getText();
+        saveConnections();
+        connectionList.updateUI();
+      }
+      
+      @Override
+      public void removeUpdate(DocumentEvent e) {
+        currentEdit.domain = txt_domain.getText();
+        saveConnections();
+        connectionList.updateUI();
+      }
+      
+      @Override
+      public void changedUpdate(DocumentEvent e) {
+        currentEdit.domain = txt_domain.getText();
+        saveConnections();
+        connectionList.updateUI();
+      }
+    });
+    
+    txt_resolution.getDocument().addDocumentListener(new DocumentListener() {
+      @Override
+      public void insertUpdate(DocumentEvent e) {
+        currentEdit.resolution = txt_resolution.getText();
+        saveConnections();
+        connectionList.updateUI();
+      }
+      
+      @Override
+      public void removeUpdate(DocumentEvent e) {
+        currentEdit.resolution = txt_resolution.getText();
+        saveConnections();
+        connectionList.updateUI();
+      }
+      
+      @Override
+      public void changedUpdate(DocumentEvent e) {
+        currentEdit.resolution = txt_resolution.getText();
+        saveConnections();
+        connectionList.updateUI();
+      }
+    });
+    
+    txt_note.getDocument().addDocumentListener(new DocumentListener() {
+      @Override
+      public void insertUpdate(DocumentEvent e) {
+        currentEdit.note = txt_note.getText();
+        saveConnections();
+        connectionList.updateUI();
+      }
+      
+      @Override
+      public void removeUpdate(DocumentEvent e) {
+        currentEdit.note = txt_note.getText();
+        saveConnections();
+        connectionList.updateUI();
+      }
+      
+      @Override
+      public void changedUpdate(DocumentEvent e) {
+        currentEdit.note = txt_note.getText();
+        saveConnections();
+        connectionList.updateUI();
+      }
+    });
+  
+    cb_fitToScreen.addItemListener(new ItemListener() {
+      public void itemStateChanged(ItemEvent e) {
+        txt_resolution.setEnabled(cb_fitToScreen.isSelected());
+        
+        currentEdit.fitToScreen = cb_fitToScreen.isSelected();
+        saveConnections();
+      }
+    });
+    
+    cb_console.addItemListener(new ItemListener() {
+      public void itemStateChanged(ItemEvent e) {
+        currentEdit.console = cb_compression.isSelected();
+        saveConnections();
+      }
+    });
+    
+    cb_compression.addItemListener(new ItemListener() {
+      public void itemStateChanged(ItemEvent e) {
+        currentEdit.console = cb_compression.isSelected();
+        saveConnections();
+      }
+    });
+    
+    drp_keyboards.addItemListener(new ItemListener() {
+      @Override
+      public void itemStateChanged(ItemEvent e) {
+  
+        form.currentEdit.keyboardCode = Keyboards.getCodeFromName(drp_keyboards.getSelectedItem().toString());
+        
+        System.out.println(form.currentEdit.keyboardCode);
+        
+        saveConnections();
+      }
+    });
     
     btn_masterkey.addMouseListener(new MouseAdapter() {
       @Override
@@ -143,7 +335,6 @@ public class MainForm {
         customer.addConnection(new Connection());
         
         saveConnections();
-        fillGUI();
         
         super.mouseClicked(e);
       }
@@ -154,9 +345,8 @@ public class MainForm {
       public void mouseClicked(MouseEvent e) {
         
         customers.add(new Customer(new InputDialog().show("Enter a name for the new group")));
-  
-       saveConnections();
-        fillGUI();
+        
+        saveConnections();
         
         super.mouseClicked(e);
       }
@@ -173,7 +363,7 @@ public class MainForm {
     connectionList.setDropTarget(new DropTarget(connectionList, TransferHandler.MOVE, new CDropTargetAdapter(this, connectionList)));
     
   }
-    
+  
   private String getExpansionState() {
     
     StringBuilder sb = new StringBuilder();
@@ -203,6 +393,10 @@ public class MainForm {
     String expansionState = getExpansionState();
     TreePath selection = connectionList.getSelectionPath();
     
+    if (selection != null) {
+      System.out.println(selection.getPath());
+    }
+    
     DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
     connectionList.setModel(new DefaultTreeModel(root));
     
@@ -222,6 +416,7 @@ public class MainForm {
       root.add(customerNode);
     }
     
+    
     connectionList.setRootVisible(false);
     connectionList.setShowsRootHandles(true);
     connectionList.expandPath(new TreePath(root));
@@ -238,5 +433,4 @@ public class MainForm {
     connectionList.repaint();
     
   }
-  
 }
