@@ -2,11 +2,13 @@ package main;
 
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
+import util.ConfigManager;
 import util.Dialogs.ErrorDialog;
 import util.Keyboards;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,16 +21,17 @@ import static main.MainForm.secrethash;
 
 public class Connection {
   
-  private boolean console = false;
-  private boolean compression = false;
+  public boolean console = false;
+  public boolean compression = false;
+  public boolean fitToScreen = true;
   
   public String label = "";
   public String address = "";
-  private String username = "";
-  private String domain = "";
+  public String username = "";
+  public String domain = "";
   public String password = "";
-  private String resolution = "1280x720";
-  private String note = "";
+  public String resolution = "1280x720";
+  public String note = "";
   private ArrayList<Drive> drives = new ArrayList<>();
   public String keyboardCode = "";
   public Type type = rdp;
@@ -78,10 +81,15 @@ public class Connection {
     if (!this.password.equals("")) {
       parameter.add("/p:" + decrypt(this.password));
     }
-    if (!this.resolution.equals("")) {
+    if (!this.fitToScreen && !this.resolution.equals("")) {
       parameter.add("/size:" + this.resolution);
+    } else if (this.fitToScreen) {
+      int height = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height - 36; // Title bar
+      int width = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
+      parameter.add("/size:" + width + "x" + height);
     }
-    if (!this.keyboardCode.equals("")) {
+    
+    if (!this.keyboardCode.equals("") && !this.keyboardCode.equals("NONE")) {
       parameter.add("/kbd:" + this.keyboardCode);
     }
     
@@ -176,6 +184,9 @@ public class Connection {
   }
   
   public void startEdit(MainForm form) {
+    System.out.println("Starting editing");
+    ConfigManager.startEdit = true;
+    
     form.currentEdit = this;
     
     form.txt_label.setText(label);
@@ -185,6 +196,7 @@ public class Connection {
     form.txt_domain.setText(domain);
     form.txt_resolution.setText(resolution);
     
+    form.cb_fitToScreen.setSelected(fitToScreen);
     form.cb_console.setSelected(console);
     form.cb_compression.setSelected(compression);
     
@@ -192,6 +204,7 @@ public class Connection {
     
     form.drp_keyboards.setSelectedIndex(Keyboards.indexOf(this.keyboardCode));
     
+    ConfigManager.startEdit = false;
   }
   
   private static final String ALGORITHM = "AES";
@@ -200,7 +213,7 @@ public class Connection {
     return encrypt(valueToEnc, secrethash);
   }
   
-  public String encrypt(String valueToEnc, String inputKey) {
+  public static String encrypt(String valueToEnc, String inputKey) {
     
     if (valueToEnc.equals("") || master.equals("disabled")) {
       return valueToEnc;
