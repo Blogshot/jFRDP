@@ -10,22 +10,41 @@ import java.util.ArrayList;
 public class Keyboards extends ArrayList {
 
   private static ArrayList<Keyboard> keyboards;
-
+  
   public static ArrayList<Keyboard> getKeyboards() {
 
     if (keyboards == null) {
-      Type type = new TypeToken<ArrayList<Keyboard>>() {
-      }.getType();
+      Type type = new TypeToken<ArrayList<Keyboard>>() {}.getType();
 
       keyboards = new Gson().fromJson(jsonString, type);
     }
 
     return keyboards;
   }
+  
+  public static String getCodeFromName(String name) {
+    for (Keyboard keyboard : keyboards) {
+      if (keyboard.name.equals(name)) {
+        return keyboard.code;
+      }
+    }
+    
+    return "0";
+  }
+  
+  public static String getNameFromCode(String code) {
+    for (Keyboard keyboard : keyboards) {
+      if (keyboard.code.equals(code)) {
+        return keyboard.name;
+      }
+    }
+  
+    return "NONE";
+  }
 
   public static int indexOf(String code) {
     for (Keyboard keyboard : keyboards) {
-      if (keyboard.code.equals(code)) {
+      if (keyboard.name.equals(code) || keyboard.code.equals(code)) {
         return keyboards.indexOf(keyboard);
       }
     }
