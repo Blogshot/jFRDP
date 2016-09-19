@@ -10,12 +10,12 @@ import javax.swing.*;
 import java.io.*;
 import java.lang.reflect.Type;
 
-import static main.MainForm.customers;
-import static main.MainForm.master;
-import static main.MainForm.secrethash;
+import static main.MainForm.*;
 import static util.MD5Wrapper.createHash;
 
 public class ConfigManager {
+  
+  public static boolean startEdit = false;
   
   public static void loadConfig() {
     
@@ -115,6 +115,11 @@ public class ConfigManager {
   }
   
   public static void saveConnections(String name) {
+    // only do this when not loading Connection
+    if (startEdit) {
+      return;
+    }
+    
     System.out.print("Saving connections...");
     
     if (name.equals("")) {
