@@ -12,6 +12,7 @@ src/test
 # DMG-Creation
 jFRDP.html
 jFRDP.jnlp
+jFRDP-installer.dmg
 
 # Personal connections-File
 connections.json
