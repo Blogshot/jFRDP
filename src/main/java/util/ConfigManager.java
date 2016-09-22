@@ -17,12 +17,11 @@ public class ConfigManager {
   
   public static boolean startEdit = false;
   
-  public static void loadConfig() {
-    
+  private static JsonObject getConfig() {
     try {
       Reader reader = new FileReader("config.json");
-      
-      
+    
+    
       BufferedReader br = new BufferedReader(reader);
       StringBuilder sb = new StringBuilder();
       String s;
@@ -30,18 +29,40 @@ public class ConfigManager {
         sb.append(s);
       }
       reader.close();
-      
+    
       String content = sb.toString();
-      
+    
       JsonElement root = new JsonParser().parse(content);
-      
-      master = root.getAsJsonObject().get("master").getAsString();
+    
+      return root.getAsJsonObject();
       
     } catch (Exception e) {
       JOptionPane.showMessageDialog(new JFrame(), e.getMessage());
       e.printStackTrace();
       new ErrorDialog(e);
+    }
+    
+    return new JsonObject();
+  }
+  
+  public static void loadConfig() {
+    
+    try {
+      master = getConfig().get("master").getAsString();
+      standardKeyboardLayout = getConfig().get("standardKeyboardLayout").getAsString();
+      useStandardKeyboardLayout = getConfig().get("useStandardKeyboardLayout").getAsBoolean();
       
+    } catch (NullPointerException e) {
+      e.printStackTrace();
+      new ErrorDialog(e);
+    }
+  }
+  
+  public static JsonElement loadConfig(String attribute) {
+    if (getConfig().has(attribute)) {
+      return getConfig().get(attribute);
+    } else {
+      return null;
     }
   }
   
@@ -63,6 +84,9 @@ public class ConfigManager {
         JsonObject json = new JsonObject();
         
         json.addProperty("master", master);
+        
+        json.addProperty("standardKeyboardLayout", standardKeyboardLayout);
+        json.addProperty("useStandardKeyboardLayout", useStandardKeyboardLayout);
         
         FileWriter writer = new FileWriter(name);
         writer.write(gson.toJson(json));

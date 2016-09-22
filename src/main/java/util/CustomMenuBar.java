@@ -1,5 +1,6 @@
 package util;
 
+import main.Settings;
 import util.Dialogs.InputDialog;
 
 import javax.swing.*;
@@ -18,18 +19,18 @@ public class CustomMenuBar {
     JMenuBar menuBar = new JMenuBar();
     //Hinzufügen von Menüs
     JMenu menuFile =
-        new JMenu("Datei");
+        new JMenu("File");
     JMenu menuEdit =
-        new JMenu("Bearbeiten");
+        new JMenu("Edit");
     JMenu menuHelp =
-        new JMenu("Hilfe");
+        new JMenu("Help");
 
     menuBar.add(menuFile);
     menuBar.add(menuEdit);
     menuBar.add(menuHelp);
 
     //Hinzufügen von Untermenüs
-    JMenu menuFileNew = new JMenu("Neu");
+    JMenu menuFileNew = new JMenu("New");
 
     menuFile.add(menuFileNew);
 
@@ -46,9 +47,18 @@ public class CustomMenuBar {
         saveConnections(new InputDialog().show("Enter file name for the connections"));
       }
     });
-
+    JMenuItem menuItemFilePreferences = new JMenuItem(new AbstractAction("Preferences") {
+      public void actionPerformed(ActionEvent e) {
+        new Settings();
+      }
+    });
+    
     menuFile.add(menuItemFileSave);
     menuFile.add(menuItemFileSaveAs);
+    
+    menuFile.add(new JSeparator());
+    
+    menuFile.add(menuItemFilePreferences);
 
 
     frame.setJMenuBar(menuBar);

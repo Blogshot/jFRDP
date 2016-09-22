@@ -52,6 +52,8 @@ public class MainForm {
   
   public static String secrethash = "";
   public static String master = "";
+  public static String standardKeyboardLayout = "NONE";
+  public static boolean useStandardKeyboardLayout = false;
   public boolean editDone;
   
   public MainForm() {

@@ -4,6 +4,7 @@ import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 import util.ConfigManager;
 import util.Dialogs.ErrorDialog;
+import util.Dialogs.InputDialog;
 import util.Keyboards;
 
 import javax.crypto.Cipher;
@@ -16,8 +17,7 @@ import java.security.Key;
 import java.util.ArrayList;
 
 import static main.Connection.Type.rdp;
-import static main.MainForm.master;
-import static main.MainForm.secrethash;
+import static main.MainForm.*;
 
 public class Connection {
   
@@ -80,6 +80,8 @@ public class Connection {
     }
     if (!this.password.equals("")) {
       parameter.add("/p:" + decrypt(this.password));
+    } else {
+      parameter.add("/p:" + new InputDialog().show("Please enter a password."));
     }
     if (!this.fitToScreen && !this.resolution.equals("")) {
       parameter.add("/size:" + this.resolution);
@@ -89,8 +91,10 @@ public class Connection {
       parameter.add("/size:" + width + "x" + height);
     }
     
-    if (!this.keyboardCode.equals("") && !this.keyboardCode.equals("NONE")) {
+    if (!this.keyboardCode.equals("NONE")) {
       parameter.add("/kbd:" + this.keyboardCode);
+    } else if (useStandardKeyboardLayout) {
+      parameter.add("/kbd:" + standardKeyboardLayout);
     }
     
     parameter.add("/cert-ignore");
