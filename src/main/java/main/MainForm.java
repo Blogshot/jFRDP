@@ -43,7 +43,6 @@ public class MainForm {
   private JButton btn_add_grp;
   public JTextField txt_note;
   public JComboBox drp_keyboards;
-  private JButton button1;
   public JCheckBox cb_fitToScreen;
   
   public static Customers customers = new Customers();
@@ -54,7 +53,7 @@ public class MainForm {
   public static String master = "";
   public static String standardKeyboardLayout = "NONE";
   public static boolean useStandardKeyboardLayout = false;
-  public boolean editDone;
+  public static boolean useDebug = false;
   
   public MainForm() {
     
@@ -357,7 +356,7 @@ public class MainForm {
     // Setup connectionList
     connectionList.addMouseListener(new jTreeMouseAdapter(this, connectionList));
     
-    connectionList.setCellRenderer(new jTreeCellRenderer(this));
+    connectionList.setCellRenderer(new jTreeCellRenderer());
     
     connectionList.setDragEnabled(true);
     connectionList.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);

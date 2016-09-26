@@ -16,6 +16,7 @@ public class Settings {
   private JTabbedPane tabView;
   private JComboBox drp_languages;
   private JCheckBox cb_useStandardKeyboardLayout;
+  private JCheckBox cb_useDebug;
   
   public Settings() {
   
@@ -32,7 +33,10 @@ public class Settings {
       drp_languages.addItem(keyboard);
     }
   
-    // set saved entry
+    // set saved entries
+    cb_useDebug.setSelected(ConfigManager.loadConfig("useDebug").getAsBoolean());
+    cb_useStandardKeyboardLayout.setSelected(ConfigManager.loadConfig("useStandardKeyboardLayout").getAsBoolean());
+    drp_languages.setEnabled(ConfigManager.loadConfig("useStandardKeyboardLayout").getAsBoolean());
     drp_languages.setSelectedIndex(Keyboards.indexOf(ConfigManager.loadConfig("standardKeyboardLayout").getAsString()));
     
     drp_languages.addItemListener(new ItemListener() {
@@ -46,6 +50,17 @@ public class Settings {
     cb_useStandardKeyboardLayout.addItemListener(new ItemListener() {
       public void itemStateChanged(ItemEvent e) {
         MainForm.useStandardKeyboardLayout = cb_useStandardKeyboardLayout.isSelected();
+      
+        drp_languages.setEnabled(cb_useStandardKeyboardLayout.isSelected());
+      
+        saveConfig();
+      }
+    });
+  
+    cb_useDebug.addItemListener(new ItemListener() {
+      public void itemStateChanged(ItemEvent e) {
+        MainForm.useDebug = cb_useDebug.isSelected();
+      
         saveConfig();
       }
     });
