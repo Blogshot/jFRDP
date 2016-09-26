@@ -29,7 +29,7 @@ public class Keyboards extends ArrayList {
       }
     }
     
-    return "0";
+    return "";
   }
   
   public static String getNameFromCode(String code) {
@@ -39,7 +39,7 @@ public class Keyboards extends ArrayList {
       }
     }
   
-    return "NONE";
+    return "NOT FOUND";
   }
 
   public static int indexOf(String code) {
