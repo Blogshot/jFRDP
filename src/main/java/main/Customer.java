@@ -15,6 +15,9 @@ public class Customer {
     if (connection.address.startsWith("http")) {
       connection.type = Connection.Type.http;
     }
+    if (connection.address.startsWith("ftp")) {
+      connection.type = Connection.Type.ftp;
+    }
     connections.add(connection);
   }
 
