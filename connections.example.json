@@ -5,26 +5,32 @@
       {
         "console": false,
         "compression": false,
-        "label": "Default RDP",
+        "fitToScreen": false,
+        "label": "RDP1",
         "address": "192.168.1.1",
-        "username": "username",
-        "domain": "example",
-        "password": "<hashed-secret>",
-        "resolution": "1337x666",
-        "note": "Sample Connection",
-        "type":"rdp"
+        "username": "",
+        "domain": "",
+        "password": "",
+        "resolution": "1280x720",
+        "note": "",
+        "drives": [],
+        "keyboardCode": "",
+        "type": "rdp"
       },
       {
         "console": false,
         "compression": false,
+        "fitToScreen": false,
         "label": "Default HTTP",
-        "address": "192.168.1.1",
-        "username": "username",
-        "domain": "example",
-        "password": "<hashed-secret>",
+        "address": "http://192.168.1.1",
+        "username": "",
+        "domain": "",
+        "password": "",
         "resolution": "1280x720",
-        "note": "Sample Connection",
-        "type":"http"
+        "note": "",
+        "drives": [],
+        "keyboardCode": "",
+        "type": "http"
       }
     ]
   },
@@ -32,28 +38,34 @@
     "name": "Customer2",
     "connections": [
       {
-        "console": true,
+        "console": false,
         "compression": false,
+        "fitToScreen": false,
         "label": "Default RDP",
-        "address": "192.168.1.1",
-        "username": "username",
-        "domain": "example",
-        "password": "<hashed-secret>",
+        "address": "http://192.168.1.1",
+        "username": "",
+        "domain": "",
+        "password": "",
         "resolution": "1280x720",
-        "note": "Sample Connnction",
-        "type":"rdp"
+        "note": "",
+        "drives": [],
+        "keyboardCode": "",
+        "type": "rdp"
       },
       {
-        "console": true,
+        "console": false,
         "compression": false,
-        "label": "Default HTTP",
-        "address": "192.168.1.1",
-        "username": "username",
-        "domain": "example",
-        "password": "<hashed-secret>",
+        "fitToScreen": false,
+        "label": "Default HTTPS",
+        "address": "https://192.168.1.1",
+        "username": "",
+        "domain": "",
+        "password": "",
         "resolution": "1280x720",
-        "note": "Sample Connnction",
-        "type":"http"
+        "note": "",
+        "drives": [],
+        "keyboardCode": "",
+        "type": "http"
       }
     ]
   }

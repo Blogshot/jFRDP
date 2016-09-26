@@ -1,5 +1,6 @@
 {
   "master": "disabled",
   "standardKeyboardLayout": "0x00000407",
-  "useStandardKeyboardLayout": true
+  "useStandardKeyboardLayout": true,
+  "useDebug": false
 }
