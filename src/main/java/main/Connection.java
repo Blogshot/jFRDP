@@ -37,7 +37,7 @@ public class Connection {
   public Type type = rdp;
   
   public enum Type {
-    rdp, http
+    rdp, http, ftp
   }
   
   public Connection() {
@@ -91,7 +91,7 @@ public class Connection {
       parameter.add("/size:" + width + "x" + height);
     }
     
-    if (!this.keyboardCode.equals("NONE")) {
+    if (!this.keyboardCode.equals("")) {
       parameter.add("/kbd:" + this.keyboardCode);
     } else if (useStandardKeyboardLayout) {
       parameter.add("/kbd:" + standardKeyboardLayout);
@@ -121,54 +121,55 @@ public class Connection {
       @Override
       public void run() {
         try {
-          ConnectionDebug debug = new ConnectionDebug("Debugger");
-          
           ProcessBuilder ps = new ProcessBuilder(params);
-          
-          debug.debugger.append(ps.command().toString().replace("[", "").replace("]", "").replace(", ", " "));
-          debug.debugger.append(System.getProperty("line.separator"));
-          debug.debugger.repaint();
-          
+  
           Process p = ps.start();
           
-          Thread stdout = new Thread(new Runnable() {
-            @Override
-            public void run() {
-              try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                  debug.debugger.append("# - ");
-                  debug.debugger.append(line);
-                  debug.debugger.append(System.getProperty("line.separator"));
-                  debug.debugger.repaint();
+          if (MainForm.useDebug) {
+            ConnectionDebug debug = new ConnectionDebug("Debugger");
+            
+            debug.debugger.append(ps.command().toString().replace("[", "").replace("]", "").replace(", ", " "));
+            debug.debugger.append(System.getProperty("line.separator"));
+            debug.debugger.repaint();
+            
+            Thread stdout = new Thread(new Runnable() {
+              @Override
+              public void run() {
+                try {
+                  BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                  String line;
+                  while ((line = reader.readLine()) != null) {
+                    debug.debugger.append("# - ");
+                    debug.debugger.append(line);
+                    debug.debugger.append(System.getProperty("line.separator"));
+                    debug.debugger.repaint();
+                  }
+                } catch (Exception e) {
+                  e.printStackTrace();
                 }
-              } catch (Exception e) {
-                e.printStackTrace();
               }
-            }
-          });
-          stdout.start();
-          
-          Thread stderr = new Thread(new Runnable() {
-            @Override
-            public void run() {
-              try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                  debug.debugger.append("x - ");
-                  debug.debugger.append(line);
-                  debug.debugger.append(System.getProperty("line.separator"));
-                  debug.debugger.repaint();
+            });
+            stdout.start();
+            
+            Thread stderr = new Thread(new Runnable() {
+              @Override
+              public void run() {
+                try {
+                  BufferedReader reader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+                  String line;
+                  while ((line = reader.readLine()) != null) {
+                    debug.debugger.append("x - ");
+                    debug.debugger.append(line);
+                    debug.debugger.append(System.getProperty("line.separator"));
+                    debug.debugger.repaint();
+                  }
+                } catch (Exception e) {
+                  e.printStackTrace();
                 }
-              } catch (Exception e) {
-                e.printStackTrace();
               }
-            }
-          });
-          stderr.start();
-          
+            });
+            stderr.start();
+          }
         } catch (IOException e) {
           e.printStackTrace();
         }
