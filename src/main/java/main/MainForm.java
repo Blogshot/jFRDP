@@ -38,7 +38,6 @@ public class MainForm {
   public JCheckBox cb_compression;
   public JPanel root;
   public JTextField txt_domain;
-  private JButton btn_masterkey;
   private JButton btn_add;
   private JButton btn_add_grp;
   public JTextField txt_note;
@@ -292,15 +291,6 @@ public class MainForm {
       }
     });
     
-    btn_masterkey.addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseClicked(MouseEvent e) {
-        
-        setNewMaster(new InputDialog().show("Enter a master-key (leave blank to disable encryption)"));
-        
-        saveConfig();
-      }
-    });
     
     btn_add.addMouseListener(new MouseAdapter() {
       @Override

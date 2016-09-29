@@ -1,14 +1,18 @@
 package main;
 
 import util.ConfigManager;
+import util.Dialogs.InputDialog;
 import util.Keyboards;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import static util.ConfigManager.saveConfig;
+import static util.ConfigManager.setNewMaster;
 
 
 public class Settings {
@@ -17,6 +21,7 @@ public class Settings {
   private JComboBox drp_languages;
   private JCheckBox cb_useStandardKeyboardLayout;
   private JCheckBox cb_useDebug;
+  private JButton btn_masterkey;
   
   public Settings() {
   
@@ -28,7 +33,11 @@ public class Settings {
   
     frame.setVisible(true);
   
+    initGeneral();
+    initSecurity();
+  }
   
+  private void initGeneral() {
     for (Keyboards.Keyboard keyboard : Keyboards.getKeyboards()) {
       drp_languages.addItem(keyboard);
     }
@@ -38,7 +47,7 @@ public class Settings {
     cb_useStandardKeyboardLayout.setSelected(ConfigManager.loadConfig("useStandardKeyboardLayout").getAsBoolean());
     drp_languages.setEnabled(ConfigManager.loadConfig("useStandardKeyboardLayout").getAsBoolean());
     drp_languages.setSelectedIndex(Keyboards.indexOf(ConfigManager.loadConfig("standardKeyboardLayout").getAsString()));
-    
+  
     drp_languages.addItemListener(new ItemListener() {
       @Override
       public void itemStateChanged(ItemEvent e) {
@@ -60,6 +69,18 @@ public class Settings {
     cb_useDebug.addItemListener(new ItemListener() {
       public void itemStateChanged(ItemEvent e) {
         MainForm.useDebug = cb_useDebug.isSelected();
+      
+        saveConfig();
+      }
+    });
+  }
+  
+  private void initSecurity() {
+    btn_masterkey.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+      
+        setNewMaster(new InputDialog().show("Enter a master-key (leave blank to disable encryption)"));
       
         saveConfig();
       }
