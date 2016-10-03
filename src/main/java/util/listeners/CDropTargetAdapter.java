@@ -61,7 +61,7 @@ public class CDropTargetAdapter extends DropTargetAdapter {
       connectionList.updateUI();
 
       saveConnections();
-      form.fillGUI();
+      form.connectionList.updateUI();
 
     } else {
       System.out.println("drop: reject");

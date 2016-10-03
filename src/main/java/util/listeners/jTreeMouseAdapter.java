@@ -23,6 +23,7 @@ public class jTreeMouseAdapter extends MouseAdapter {
     this.connectionList = connectionList;
   }
 
+  
   @Override
   public void mouseClicked(MouseEvent event) {
 
@@ -58,9 +59,6 @@ public class jTreeMouseAdapter extends MouseAdapter {
             }
           }
           return;
-        }
-        if (event.getClickCount() == 1) {
-          connection.startEdit(form);
         }
       } else if (node.getUserObject() instanceof Customer) {
 
