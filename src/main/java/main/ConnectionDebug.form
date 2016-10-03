@@ -19,6 +19,8 @@
             <constraints/>
             <properties>
               <lineWrap value="true"/>
+              <text value="NOTICE: These parameters don't need to be enclosed with quotes because Java handles them internally. When copy-pasting, be sure to check wether you need them!&#10;## "/>
+              <wrapStyleWord value="true"/>
             </properties>
           </component>
         </children>

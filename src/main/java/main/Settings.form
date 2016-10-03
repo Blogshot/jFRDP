@@ -65,6 +65,14 @@
                   <model/>
                 </properties>
               </component>
+              <component id="26fdc" class="javax.swing.JCheckBox" binding="cb_closeAutomatically">
+                <constraints>
+                  <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Close Debug-Window when ending session"/>
+                </properties>
+              </component>
             </children>
           </grid>
           <grid id="e2f9a" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">

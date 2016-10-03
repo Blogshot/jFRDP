@@ -3,8 +3,6 @@ package util;
 import main.Connection;
 import main.Customer;
 import main.MainForm;
-import main.Start;
-import util.Dialogs.InputDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,18 +26,23 @@ public class ConnectionPopupMenu extends JPanel {
             customer.removeConnection(connection);
             break;
           case "Rename":
-            connection.label = new InputDialog().show("Enter a new name");
+  
+            String newName = JOptionPane.showInputDialog(null, "Enter a new name", connection.label);
+            
+            if (!newName.equals("")) {
+              connection.label = newName;
+            }
             break;
           case "Duplicate":
             customer.addConnection(new Connection(connection));
             break;
           case "Edit":
-            connection.startEdit(Start.form);
+            connection.startEdit(form);
             break;
         }
 
         saveConnections();
-        form.fillGUI();
+        form.connectionList.updateUI();
       }
     };
 
@@ -69,7 +72,7 @@ public class ConnectionPopupMenu extends JPanel {
 
 
     popup.setBounds(x, y, popup.getPreferredSize().width, popup.getPreferredSize().height);
-    popup.show(Start.form.connectionList, x,y);
+    popup.show(form.connectionList, x,y);
   }
 
   // An inner class to check whether mouse events are the popup trigger

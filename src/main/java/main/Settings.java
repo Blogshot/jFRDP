@@ -22,6 +22,7 @@ public class Settings {
   private JCheckBox cb_useStandardKeyboardLayout;
   private JCheckBox cb_useDebug;
   private JButton btn_masterkey;
+  private JCheckBox cb_closeAutomatically;
   
   public Settings() {
   
@@ -44,6 +45,7 @@ public class Settings {
   
     // set saved entries
     cb_useDebug.setSelected(ConfigManager.loadConfig("useDebug").getAsBoolean());
+    cb_closeAutomatically.setSelected(ConfigManager.loadConfig("closeDebugAutomatically").getAsBoolean());
     cb_useStandardKeyboardLayout.setSelected(ConfigManager.loadConfig("useStandardKeyboardLayout").getAsBoolean());
     drp_languages.setEnabled(ConfigManager.loadConfig("useStandardKeyboardLayout").getAsBoolean());
     drp_languages.setSelectedIndex(Keyboards.indexOf(ConfigManager.loadConfig("standardKeyboardLayout").getAsString()));
@@ -69,6 +71,16 @@ public class Settings {
     cb_useDebug.addItemListener(new ItemListener() {
       public void itemStateChanged(ItemEvent e) {
         MainForm.useDebug = cb_useDebug.isSelected();
+  
+        cb_closeAutomatically.setEnabled(cb_useDebug.isSelected());
+        
+        saveConfig();
+      }
+    });
+  
+    cb_closeAutomatically.addItemListener(new ItemListener() {
+      public void itemStateChanged(ItemEvent e) {
+        MainForm.closeDebugAutomatically = cb_closeAutomatically.isSelected();
       
         saveConfig();
       }

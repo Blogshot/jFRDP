@@ -62,8 +62,8 @@ public class Connection {
     // Open a new RDP-Connection
     ArrayList<String> parameter = new ArrayList<>();
     
-    // command
-    parameter.add("/usr/local/bin/xfreerdp");
+    // executable itself
+    parameter.add(MainForm.xfreerdpExecutable);
     
     // parameters
     if (this.console) {
@@ -86,7 +86,7 @@ public class Connection {
     if (!this.fitToScreen && !this.resolution.equals("")) {
       parameter.add("/size:" + this.resolution);
     } else if (this.fitToScreen) {
-      int height = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height - 36; // Title bar
+      int height = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().height - MainForm.frame.getInsets().top; // Title bar
       int width = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().width;
       parameter.add("/size:" + width + "x" + height);
     }
@@ -117,12 +117,14 @@ public class Connection {
   
   private void execute(String[] params) {
     
+    // Thread to get output
     Thread t = new Thread(new Runnable() {
       @Override
       public void run() {
         try {
+          
           ProcessBuilder ps = new ProcessBuilder(params);
-  
+          
           Process p = ps.start();
           
           if (MainForm.useDebug) {
@@ -169,9 +171,21 @@ public class Connection {
               }
             });
             stderr.start();
+  
+            // Close debugging-window automatically after process finishes
+            if (useDebug && closeDebugAutomatically) {
+              try {
+                p.waitFor();
+              } catch (InterruptedException e) {
+                e.printStackTrace();
+              }
+  
+              debug.frame.setVisible(false);
+            }
           }
         } catch (IOException e) {
           e.printStackTrace();
+          new ErrorDialog(e);
         }
       }
     });
@@ -194,20 +208,22 @@ public class Connection {
     
     form.currentEdit = this;
     
-    form.txt_label.setText(label);
-    form.txt_address.setText(address);
-    form.txt_username.setText(username);
-    form.txt_password.setText(decrypt(password));
-    form.txt_domain.setText(domain);
-    form.txt_resolution.setText(resolution);
+    EditForm editForm = new EditForm(this, form.connectionList);
+  
+    editForm.txt_label.setText(label);
+    editForm.txt_address.setText(address);
+    editForm.txt_username.setText(username);
+    editForm.txt_password.setText(decrypt(password));
+    editForm.txt_domain.setText(domain);
+    editForm.txt_resolution.setText(resolution);
     
-    form.cb_fitToScreen.setSelected(fitToScreen);
-    form.cb_console.setSelected(console);
-    form.cb_compression.setSelected(compression);
+    editForm.cb_fitToScreen.setSelected(fitToScreen);
+    editForm.cb_console.setSelected(console);
+    editForm.cb_compression.setSelected(compression);
+  
+    editForm.txt_note.setText(note);
     
-    form.txt_note.setText(note);
-    
-    form.drp_keyboards.setSelectedIndex(Keyboards.indexOf(this.keyboardCode));
+    editForm.drp_keyboards.setSelectedIndex(Keyboards.indexOf(this.keyboardCode));
     
     ConfigManager.startEdit = false;
   }
