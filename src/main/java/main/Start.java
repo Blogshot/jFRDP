@@ -3,12 +3,9 @@ package main;
 import javax.swing.*;
 
 public class Start {
-
-  public static MainForm form;
-
-
+  
   public static void main(String[] args) {
-    form = new MainForm();
+    new MainForm();
   }
 
   public static String showSecretInputDialog() {
