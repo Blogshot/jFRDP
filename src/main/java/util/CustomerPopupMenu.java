@@ -2,8 +2,6 @@ package util;
 
 import main.Customer;
 import main.MainForm;
-import main.Start;
-import util.Dialogs.InputDialog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,7 +26,12 @@ public class CustomerPopupMenu extends JPanel {
             customers.remove(customer);
             break;
           case "Rename":
-            customer.setName(new InputDialog().show("Enter a new name"));
+  
+            String newName = JOptionPane.showInputDialog(null, "Enter a new name", customer.getName());
+            
+            if (!newName.equals("")) {
+              customer.setName(newName);
+            }
             break;
           case "Duplicate":
             customers.add(new Customer(customer));
@@ -36,7 +39,7 @@ public class CustomerPopupMenu extends JPanel {
         }
 
         saveConnections();
-        form.fillGUI();
+        form.connectionList.updateUI();
       }
     };
 
@@ -60,7 +63,7 @@ public class CustomerPopupMenu extends JPanel {
     item.addMouseListener(hover);
 
     popup.setBounds(x, y, popup.getPreferredSize().width, popup.getPreferredSize().height);
-    popup.show(Start.form.connectionList, x,y);
+    popup.show(form.connectionList, x,y);
   }
 
   // An inner class to check whether mouse events are the popup trigger
