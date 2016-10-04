@@ -26,6 +26,7 @@ import static util.MD5Wrapper.createHash;
 
 public class MainForm {
   public static boolean closeDebugAutomatically;
+  public static int primaryScreen;
   private JButton btn_add;
   private JButton btn_add_grp;
   private JPanel root;

@@ -53,7 +53,8 @@ public class ConfigManager {
       useStandardKeyboardLayout = getConfig().get("useStandardKeyboardLayout").getAsBoolean();
       useDebug = getConfig().get("useDebug").getAsBoolean();
       closeDebugAutomatically = getConfig().get("closeDebugAutomatically").getAsBoolean();
-      
+      primaryScreen = getConfig().get("primaryScreen").getAsInt();
+  
     } catch (NullPointerException e) {
       e.printStackTrace();
       new ErrorDialog(e);
@@ -91,6 +92,7 @@ public class ConfigManager {
         json.addProperty("useStandardKeyboardLayout", useStandardKeyboardLayout);
         json.addProperty("useDebug", useDebug);
         json.addProperty("closeDebugAutomatically", closeDebugAutomatically);
+        json.addProperty("primaryScreen", primaryScreen);
   
         FileWriter writer = new FileWriter(name);
         writer.write(gson.toJson(json));

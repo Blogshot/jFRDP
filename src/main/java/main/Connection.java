@@ -97,6 +97,14 @@ public class Connection {
       parameter.add("/kbd:" + standardKeyboardLayout);
     }
     
+    // TODO Broken on current build, binary file has bugs. Will always use default screen
+    if (MainForm.primaryScreen == 0) {
+      System.out.println(getCurrentMonitor());
+      parameter.add("/monitors:" + getCurrentMonitor());
+    } else {
+      parameter.add("/monitors:" + primaryScreen);
+    }
+    
     parameter.add("/cert-ignore");
     parameter.add("+clipboard");
     parameter.add("/drive:Home," + System.getenv("HOME"));
@@ -113,6 +121,23 @@ public class Connection {
     String[] paramArray = listString.split("\n");
     
     execute(paramArray);
+  }
+  
+  private int getCurrentMonitor() {
+    GraphicsConfiguration config = frame.getGraphicsConfiguration();
+    GraphicsDevice myScreen = config.getDevice();
+    GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+    // AFAIK - there are no guarantees that screen devices are in order...
+    // but they have been on every system I've used.
+    GraphicsDevice[] allScreens = env.getScreenDevices();
+    for (int i = 0; i < allScreens.length; i++) {
+      if (allScreens[i].equals(myScreen))
+      {
+        return i;
+      }
+    }
+    
+    return 0;
   }
   
   private void execute(String[] params) {

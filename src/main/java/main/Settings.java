@@ -1,6 +1,7 @@
 package main;
 
 import util.ConfigManager;
+import util.CustomScreen;
 import util.Dialogs.InputDialog;
 import util.Keyboards;
 
@@ -10,6 +11,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import static util.ConfigManager.saveConfig;
 import static util.ConfigManager.setNewMaster;
@@ -23,6 +25,7 @@ public class Settings {
   private JCheckBox cb_useDebug;
   private JButton btn_masterkey;
   private JCheckBox cb_closeAutomatically;
+  private JComboBox drp_primaryScreen;
   
   public Settings() {
   
@@ -43,17 +46,33 @@ public class Settings {
       drp_languages.addItem(keyboard);
     }
   
+    drp_primaryScreen.addItem("Auto");
+    for (CustomScreen screen : getMonitors()) {
+      System.out.println(screen);
+      drp_primaryScreen.addItem(screen);
+    }
+    
     // set saved entries
     cb_useDebug.setSelected(ConfigManager.loadConfig("useDebug").getAsBoolean());
     cb_closeAutomatically.setSelected(ConfigManager.loadConfig("closeDebugAutomatically").getAsBoolean());
     cb_useStandardKeyboardLayout.setSelected(ConfigManager.loadConfig("useStandardKeyboardLayout").getAsBoolean());
     drp_languages.setEnabled(ConfigManager.loadConfig("useStandardKeyboardLayout").getAsBoolean());
     drp_languages.setSelectedIndex(Keyboards.indexOf(ConfigManager.loadConfig("standardKeyboardLayout").getAsString()));
-  
+    drp_primaryScreen.setSelectedIndex(ConfigManager.loadConfig("primaryScreen").getAsInt());
+    
     drp_languages.addItemListener(new ItemListener() {
       @Override
       public void itemStateChanged(ItemEvent e) {
         MainForm.standardKeyboardLayout = ((Keyboards.Keyboard)drp_languages.getSelectedItem()).code;
+        saveConfig();
+      }
+    });
+    
+    drp_primaryScreen.addItemListener(new ItemListener() {
+      @Override
+      public void itemStateChanged(ItemEvent e) {
+        System.out.println(drp_primaryScreen.getSelectedIndex() + "");
+        MainForm.primaryScreen = drp_primaryScreen.getSelectedIndex();
         saveConfig();
       }
     });
@@ -97,5 +116,26 @@ public class Settings {
         saveConfig();
       }
     });
+  }
+  
+  private ArrayList<CustomScreen> getMonitors() {
+    
+    ArrayList<CustomScreen> result = new ArrayList<>();
+    
+    GraphicsEnvironment g = GraphicsEnvironment.getLocalGraphicsEnvironment();
+    GraphicsDevice[] devices = g.getScreenDevices();
+        
+    for (int i=0; i< devices.length; i++) {
+      GraphicsDevice device = devices[i];
+      
+      result.add(new CustomScreen(
+          i,
+          device.getDisplayMode().getWidth(),
+          device.getDisplayMode().getHeight()
+      ));
+    }
+    
+    return result;
+    
   }
 }
