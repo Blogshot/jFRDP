@@ -13,9 +13,8 @@ Keep in mind that this is in early development since I work on this in my spare 
 
 ## Install FreeRDP
 
-#### Mac OS
-Install the latest FreeRDP via Homebrew:
-`brew install homebrew/x11/freerdp --HEAD`
+#### Mac OS / Ubuntu / Debian
+XfreeRDP comes as executable within this package.
 
 #### Ubuntu/Debian
 `sudo apt-get install freerdp-x11`
