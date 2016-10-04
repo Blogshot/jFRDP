@@ -20,6 +20,7 @@ jFRDP-installer.dmg
 # Personal connections-File
 connections.json
 config.json
+*_backup.json
 
 # IDEA
 .idea
