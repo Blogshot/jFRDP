@@ -3,6 +3,7 @@ package main;
 import util.CustomMenuBar;
 import util.Customers;
 import util.Dialogs.InputDialog;
+import util.Dialogs.SecretInputDialog;
 import util.listeners.CDropTargetAdapter;
 import util.listeners.jTreeMouseAdapter;
 import util.renderer.jTreeCellRenderer;
@@ -20,7 +21,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static main.Start.showSecretInputDialog;
 import static util.ConfigManager.*;
 import static util.MD5Wrapper.createHash;
 
@@ -72,14 +72,25 @@ public class MainForm {
     loadConfig();
     
     if (master.equals("disabled")) {
-      fillGUI();
+      prepareJTree();
     } else {
-      secrethash = createHash(showSecretInputDialog());
       
-      if (secrethash.equals(master)) {
-        fillGUI();
-      } else {
-        JOptionPane.showMessageDialog(new JFrame(), "Master-Password incorrect!");
+      // first iteration
+      boolean repeat = true;
+      
+      while (repeat) {
+        
+        secrethash = createHash(new SecretInputDialog().show("Enter your master-key to unlock passwords"));
+        
+        if (secrethash.equals(master)) {
+          // Ding Ding Ding!
+          repeat = false;
+          prepareJTree();
+        } else {
+          // Ohhh...
+          repeat = true;
+          JOptionPane.showMessageDialog(new JFrame(), "Master-Password incorrect!");
+        }
       }
     }
     
@@ -171,7 +182,7 @@ public class MainForm {
     xfreerdpExecutable = homeDir + "/.xfreerdp/xfreerdp";
   }
 
-  public void fillGUI() {
+  private void prepareJTree() {
   
     // Do not show default nodes on startup
     DefaultMutableTreeNode root = new DefaultMutableTreeNode("root");
