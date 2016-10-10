@@ -63,7 +63,7 @@ public class Connection {
     ArrayList<String> parameter = new ArrayList<>();
     
     // executable itself
-    parameter.add(MainForm.xfreerdpExecutable);
+    parameter.add(MainForm.xfreerdpHome + executableName);
     
     // parameters
     if (this.console) {

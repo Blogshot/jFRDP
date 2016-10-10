@@ -19,7 +19,7 @@ public class ConfigManager {
   
   private static JsonObject getConfig() {
     try {
-      Reader reader = new FileReader("config.json");
+      Reader reader = new FileReader(xfreerdpHome + configName);
     
     
       BufferedReader br = new BufferedReader(reader);
@@ -94,7 +94,7 @@ public class ConfigManager {
         json.addProperty("closeDebugAutomatically", closeDebugAutomatically);
         json.addProperty("primaryScreen", primaryScreen);
   
-        FileWriter writer = new FileWriter(name);
+        FileWriter writer = new FileWriter(xfreerdpHome + configName);
         writer.write(gson.toJson(json));
         writer.close();
         
@@ -111,7 +111,7 @@ public class ConfigManager {
   public static Customers loadCustomers() {
     
     try {
-      Reader reader = new FileReader("connections.json");
+      Reader reader = new FileReader(xfreerdpHome + connectionsName);
       
       BufferedReader br = new BufferedReader(reader);
       StringBuilder sb = new StringBuilder();
@@ -160,7 +160,7 @@ public class ConfigManager {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         
         String json = gson.toJson(customers);
-        FileWriter writer = new FileWriter(name);
+        FileWriter writer = new FileWriter(xfreerdpHome + connectionsName);
         writer.write(json);
         writer.close();
         

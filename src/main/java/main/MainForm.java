@@ -42,15 +42,20 @@ public class MainForm {
   public static boolean useStandardKeyboardLayout = false;
   public static boolean useDebug = false;
   
+  public static String executableName = "xfreerdp";
+  public static String configName = "config.json";
+  public static String connectionsName = "connections.json";
+  
   static JFrame frame;
   
-  public static String xfreerdpExecutable = "";
+  public static String xfreerdpHome = "";
   
   public MainForm() {
   
     // prepare binary executable
     try {
       prepareXFreeRDP();
+      prepareConfigFiles();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -150,39 +155,71 @@ public class MainForm {
   
   private void prepareXFreeRDP() throws IOException {
     String homeDir = System.getProperty("user.home");
+  
+    xfreerdpHome = homeDir + "/.xfreerdp/";
     
-    File executable = new File(homeDir + "/.xfreerdp/xfreerdp");
+    File executable = new File(xfreerdpHome + executableName);
     
     // Only if executable is not available
     if (!executable.exists()) {
       
       //gets file from inside the JAR file as an input stream
       InputStream is = getClass().getResource("/xfreerdp").openStream();
-      //sets the output stream to a system folder
       
-      if (!Files.exists(Paths.get(homeDir + "/.xfreerdp/xfreerdp"))) {
-        Files.createDirectory(Paths.get(homeDir + "/.xfreerdp"));
-      }
+      // mkdir for the hidden config-folder
+      Files.createDirectories(Paths.get(homeDir + "/.xfreerdp"));
       
-      OutputStream os = new FileOutputStream(executable);
-      
-      byte[] b = new byte[2048];
-      int length;
-      
-      while ((length = is.read(b)) != -1) {
-        os.write(b, 0, length);
-      }
-      
-      is.close();
-      os.close();
+      // write binary to home folder
+      writeToFile(executable, is);
       
       // set permissions to execute by owner
       executable.setExecutable(true);
     }
-  
-    xfreerdpExecutable = homeDir + "/.xfreerdp/xfreerdp";
   }
-
+  
+  private void prepareConfigFiles() throws IOException {
+    String homeDir = System.getProperty("user.home");
+    
+    File config = new File(xfreerdpHome + configName);
+    File connections = new File(xfreerdpHome + connectionsName);
+  
+    // mkdir for the hidden config-folder
+    Files.createDirectories(Paths.get(homeDir + "/.xfreerdp"));
+    
+    // Only if executable is not available
+    if (!config.exists()) {
+      
+      //gets file from inside the JAR file as an input stream
+      InputStream isConfig = getClass().getResource("/exampleConfig.json").openStream();
+      
+      // write to home folder
+      writeToFile(config, isConfig);
+    }
+    
+    if (!connections.exists()) {
+      //gets file from inside the JAR file as an input stream
+      InputStream isConnections = getClass().getResource("/exampleConnections.json").openStream();
+      
+      // write to home folder
+      writeToFile(connections, isConnections);
+    }
+  }
+  
+  private void writeToFile(File file, InputStream isFile) throws IOException {
+    // write to home folder
+    OutputStream os = new FileOutputStream(file);
+  
+    byte[] b = new byte[2048];
+    int length;
+  
+    while ((length = isFile.read(b)) != -1) {
+      os.write(b, 0, length);
+    }
+  
+    isFile.close();
+    os.close();
+  }
+  
   private void prepareJTree() {
   
     // Do not show default nodes on startup

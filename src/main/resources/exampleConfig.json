@@ -2,5 +2,7 @@
   "master": "disabled",
   "standardKeyboardLayout": "0x00000407",
   "useStandardKeyboardLayout": true,
-  "useDebug": false
+  "useDebug": true,
+  "closeDebugAutomatically": true,
+  "primaryScreen": 0
 }
