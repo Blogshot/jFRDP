@@ -42,7 +42,7 @@ public class MainForm {
   public static boolean useStandardKeyboardLayout = false;
   public static boolean useDebug = false;
   
-  public static String executableName;
+  public static String executableName = "";
   
   public static String configName = "config.json";
   public static String connectionsName = "connections.json";
@@ -52,17 +52,6 @@ public class MainForm {
   public static String xfreerdpHome = "";
   
   public MainForm() {
-  
-    // prepare binary executable
-    try {
-      prepareXFreeRDP();
-      prepareConfigFiles();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  
-    executableName = getExecutable();
-    
     
     frame = new JFrame("jFRDP");
     frame.setContentPane(this.root);
@@ -72,6 +61,21 @@ public class MainForm {
     
     // Begin setup
     System.setProperty("apple.laf.useScreenMenuBar", "true");
+  
+    executableName = getExecutable();
+  
+    // prepare binary executable
+    try {
+      if (!executableName.equals("")) {
+        prepareXFreeRDP();
+        prepareConfigFiles();
+      } else {
+        System.out.println("Not compatible!");
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    
     
     customers = loadCustomers();
     
@@ -261,43 +265,19 @@ public class MainForm {
     connectionList.expandPath(new TreePath(root));
   }
   
-  private static String OS = System.getProperty("os.name").toLowerCase();
-  
-  private static enum EXECUTABLES = {
-      xfreerdp, wfreerdp.exe
-  }
-  
-  public static String getExecutable() {
+  private static String getExecutable() {
     
-    System.out.println(OS);
+    String OS = System.getProperty("os.name").toLowerCase();
     
-    if (isWindows()) {
-      return EXECUTABLES.wfreerdp.exe;
-    } else if (isMac()) {
-      return EXECUTABLES.xfreerdp;
-    } else if (isUnix()) {
-      return EXECUTABLES.xfreerdp;
-    } else {
-      System.out.println("Your OS is not supported!");
+    if (OS.contains("win")) {
+      return "wfreerdp.exe";
+    } else if (OS.contains("mac")) {
+      return "xfreerdp";
+    } else if (OS.contains("nix") || OS.contains("nux") || OS.contains("aix")) {
+      return "xfreerdp";
     }
-  }
-  
-  public static boolean isWindows() {
     
-    return (OS.indexOf("win") >= 0);
-    
-  }
-  
-  public static boolean isMac() {
-    
-    return (OS.indexOf("mac") >= 0);
-    
-  }
-  
-  public static boolean isUnix() {
-    
-    return (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0 );
-    
+    return "";
   }
   
 }
