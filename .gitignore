@@ -8,6 +8,7 @@ build/
 bundles/
 src/main/resources/icon*
 src/test
+out
 
 # DMG-Creation
 jFRDP.html
@@ -24,3 +25,4 @@ config.json
 
 # IDEA
 .idea
+!.idea/artifacts
