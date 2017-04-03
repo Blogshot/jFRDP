@@ -1,28 +1,8 @@
 # Gradle
-.gradle
-gradle
+.gradle/
+gradle/
 gradlew*
 
 # Build
 build/
-bundles/
-src/main/resources/icon*
-src/test
-out
-
-# DMG-Creation
-jFRDP.html
-jFRDP.jnlp
-jFRDP-installer.dmg
-
-# resources
-*.paint
-
-# Personal connections-File
-connections.json
-config.json
-*_backup.json
-
-# IDEA
-.idea
-!.idea/artifacts
+out/
