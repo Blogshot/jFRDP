@@ -42,7 +42,8 @@ public class MainForm {
   public static boolean useStandardKeyboardLayout = false;
   public static boolean useDebug = false;
   
-  public static String executableName = "xfreerdp";
+  public static String executableName;
+  
   public static String configName = "config.json";
   public static String connectionsName = "connections.json";
   
@@ -59,6 +60,9 @@ public class MainForm {
     } catch (IOException e) {
       e.printStackTrace();
     }
+  
+    executableName = getExecutable();
+    
     
     frame = new JFrame("jFRDP");
     frame.setContentPane(this.root);
@@ -255,6 +259,45 @@ public class MainForm {
     connectionList.setRootVisible(false);
     connectionList.setShowsRootHandles(true);
     connectionList.expandPath(new TreePath(root));
+  }
+  
+  private static String OS = System.getProperty("os.name").toLowerCase();
+  
+  private static enum EXECUTABLES = {
+      xfreerdp, wfreerdp.exe
+  }
+  
+  public static String getExecutable() {
+    
+    System.out.println(OS);
+    
+    if (isWindows()) {
+      return EXECUTABLES.wfreerdp.exe;
+    } else if (isMac()) {
+      return EXECUTABLES.xfreerdp;
+    } else if (isUnix()) {
+      return EXECUTABLES.xfreerdp;
+    } else {
+      System.out.println("Your OS is not supported!");
+    }
+  }
+  
+  public static boolean isWindows() {
+    
+    return (OS.indexOf("win") >= 0);
+    
+  }
+  
+  public static boolean isMac() {
+    
+    return (OS.indexOf("mac") >= 0);
+    
+  }
+  
+  public static boolean isUnix() {
+    
+    return (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0 );
+    
   }
   
 }
